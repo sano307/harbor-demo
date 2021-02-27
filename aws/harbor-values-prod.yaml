@@ -1,0 +1,28 @@
+service:
+  type: ClusterIP
+  tls:
+    enabled: true
+    existingSecret: harbor-tls-prod
+    notaryExistingSecret: notary-tls-prod
+
+ingress:
+  enabled: true
+  hosts:
+    core: registry.DOMAIN
+    notary: notary.DOMAIN
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod  # use letsencrypt-prod as the cluster issuer for TLS certs
+    ingress.kubernetes.io/force-ssl-redirect: "true"  # force https, even if http is requested
+    kubernetes.io/ingress.class: contour              # using Contour for ingress
+    kubernetes.io/tls-acme: "true"                    # using ACME certificates for TLS
+
+portal:
+  tls:
+    existingSecret: harbor-tls-prod
+
+core:
+  tls:
+    existingSecret: harbor-tls-prod
+
+harborAdminPassword: Password12345
+externalURL: https://registry.DOMAIN
